@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react';
+import { getRandomQuestions } from '../data/questions';
 import type { GameContext as GameContextType } from '../types/game';
 import { GameDifficulty, Question, Team } from '../types/game';
 
@@ -15,7 +16,8 @@ type GameAction =
   | { type: 'NEXT_TURN' }
   | { type: 'END_ROUND' }
   | { type: 'END_GAME' }
-  | { type: 'SET_CURRENT_TEAM'; payload: { teamIndex: number } };
+  | { type: 'SET_CURRENT_TEAM'; payload: { teamIndex: number } }
+  | { type: 'NEXT_QUESTION' };
 
 const initialState: GameContextType = {
   teams: [],
@@ -23,16 +25,18 @@ const initialState: GameContextType = {
   totalRounds: 5,
   currentTeamIndex: 0,
   currentQuestion: null,
+  questions: [],
   gameState: 'setup',
   difficulty: 'easy',
   timePerTurn: 30,
 };
 
-const GameContext = createContext<GameProviderContext | undefined>(undefined);
+export const GameContext = createContext<GameProviderContext | undefined>(undefined);
 
 function gameReducer(state: GameContextType, action: GameAction): GameContextType {
   switch (action.type) {
     case 'START_GAME':
+      const gameQuestions = getRandomQuestions(5);
       return {
         ...state,
         teams: action.payload.teams,
@@ -40,7 +44,8 @@ function gameReducer(state: GameContextType, action: GameAction): GameContextTyp
         gameState: 'playing',
         currentRound: 1,
         currentTeamIndex: 0,
-        currentQuestion: null,
+        questions: gameQuestions,
+        currentQuestion: gameQuestions[0],
       };
     case 'SET_QUESTION':
       return {
@@ -73,6 +78,15 @@ function gameReducer(state: GameContextType, action: GameAction): GameContextTyp
       return {
         ...state,
         currentTeamIndex: (state.currentTeamIndex + 1) % state.teams.length,
+        currentQuestion: state.questions[state.currentRound % state.questions.length],
+        currentRound: state.currentRound + 1,
+      };
+    case 'NEXT_QUESTION':
+      const nextQuestionIndex = (state.currentRound + 1) % state.questions.length;
+      return {
+        ...state,
+        currentQuestion: state.questions[nextQuestionIndex],
+        currentRound: state.currentRound + 1,
       };
     case 'SET_CURRENT_TEAM':
       return {

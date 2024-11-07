@@ -28,6 +28,7 @@ export interface GameContext {
   totalRounds: number;
   currentTeamIndex: number;
   currentQuestion: Question | null;
+  questions: Question[];
   gameState: GameState;
   difficulty: GameDifficulty;
   timePerTurn: number;

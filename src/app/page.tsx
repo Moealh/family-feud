@@ -8,8 +8,8 @@ function GameContent() {
   const { state } = useGame()
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-8">
-      <h1 className="mb-8 text-4xl font-bold text-game-blue">Family Feud</h1>
+    <main className="min-h-screen flex flex-col items-center justify-between p-8 bg-[#172352]">
+      <h1 className="mb-8 text-4xl font-bold text-game-gold">Family Feud</h1>
       {state.gameState === 'setup' ? <TeamSetup /> : <GameBoard />}
     </main>
   )
@@ -17,8 +17,10 @@ function GameContent() {
 
 export default function Home() {
   return (
-    <GameProvider>
-      <GameContent />
-    </GameProvider>
+    <div className="bg-[#172352] min-h-screen">
+      <GameProvider>
+        <GameContent />
+      </GameProvider>
+    </div>
   )
 }

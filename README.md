@@ -15,7 +15,7 @@ or
 ```bash
 yarn create next-app -e https://github.com/vadim-lobodin/prototyping-boilerplate
 ```
-
+It's a Game Time
 
 4. Copy `.env.example` to `.env.local`
 
